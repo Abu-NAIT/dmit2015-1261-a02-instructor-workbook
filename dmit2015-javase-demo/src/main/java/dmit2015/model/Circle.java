@@ -2,7 +2,7 @@
 package dmit2015.model;
 
 public class Circle {
-
+b
     private double radius;
 
     public double getRadius() {
