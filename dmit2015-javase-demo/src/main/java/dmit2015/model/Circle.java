@@ -2,7 +2,7 @@
 package dmit2015.model;
 
 public class Circle {
-b
+
     private double radius;
 
     public double getRadius() {
@@ -24,7 +24,7 @@ b
     public static void main(String[] args) {
 
         Circle currentCircle = new Circle();
-        currentCircle.setRadius(5);
+        currentCircle.setRadius(4);
 
         System.out.printf(
                 "Radius: %.2f, Area = %.2f\n",
