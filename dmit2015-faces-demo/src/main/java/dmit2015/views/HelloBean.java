@@ -5,6 +5,7 @@ import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 
+
 @Named
 @RequestScoped
 
@@ -27,7 +28,7 @@ public class HelloBean {
     public String onSubmit(){
 
         FacesContext.getCurrentInstance().addMessage(null,new FacesMessage("FacesMessage from java part"+ userInput));
-        userInput = null;
+        //userInput = null;
         return null;
     }
 }
