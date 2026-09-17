@@ -20,14 +20,14 @@
 
             <p:outputLabel for="fullName" value="Full Name" />
             <p:inputText id="fullName"
-                         value="#{studentFormBean.fullName}"
+                         value="#{studentFormBean.studentInfo.fullTime}"
                          required="true"
                          requiredMessage="Full Name is required" />
             <br /><br />
 
             <p:outputLabel for="program" value="Program" />
             <p:selectOneMenu id="program"
-                             value="#{studentFormBean.program}"
+                             value="#{studentFormBean.studentInfo.program}"
                              required="true"
                              requiredMessage="Program is required">
                 <f:selectItem itemLabel="Select Program"
@@ -43,7 +43,7 @@
             <br /><br />
 
             <p:selectBooleanCheckbox id="fullTime"
-                                     value="#{studentFormBean.fullTime}" />
+                                     value="#{studentFormBean.studentInfo.fullTime}" />
             <p:outputLabel for="fullTime"
                            value="Full Time Student" />
             <br /><br />
