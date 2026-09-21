@@ -59,6 +59,86 @@
 
 
 
+        <p:dataTable id = "studnetsDataTable"
+                     value="#{studentListSession.students}"
+                     var = "currentStudent">
+
+            <p:column headerText="Full Names">
+                <h:outputText value="#{currentStudent.fullName}" />
+
+            </p:column>
+
+            <p:column headerText="Program">
+                <h:outputText value="#{currentStudent.program}" />
+
+            </p:column>
+
+            <p:column headerText="Full Time">
+                <h:selectBooleanCheckbox value="#{currentStudent.fullTime}" disabled="true"/>
+
+            </p:column>
+
+            <p:column headerText="Action">
+                <p:commandButton value="Remove"
+                                 action="#{studentListSession.remove(currentStudent)}"
+                                 update="studnetsDataTable"
+                                 process="@this" />
+
+
+
+
+            </p:column>
+
+
+
+
+        </p:dataTable>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--        &lt;!&ndash; NEW PART: STUDENT TABLE &ndash;&gt;-->
+<!--        <p:dataTable id="studentsDataTable"-->
+<!--                     value="#{studentListSession.students}"-->
+<!--                     var="currentStudent">-->
+
+<!--            <p:column headerText="Full Name">-->
+<!--                <h:outputText value="#{currentStudent.fullName}" />-->
+<!--            </p:column>-->
+
+<!--            <p:column headerText="Program">-->
+<!--                <h:outputText value="#{currentStudent.program}" />-->
+<!--            </p:column>-->
+
+<!--            <p:column headerText="Full Time">-->
+<!--                <p:selectBooleanCheckbox-->
+<!--                        value="#{currentStudent.fullTime}"-->
+<!--                        disabled="true" />-->
+<!--            </p:column>-->
+
+<!--            <p:column headerText="Action">-->
+<!--                <p:commandButton value="Remove"-->
+<!--                                 action="#{studentListSession.remove(currentStudent)}"-->
+<!--                                 process="@this"-->
+<!--                                 update="studentsDataTable" />-->
+<!--            </p:column>-->
+
+<!--        </p:dataTable>-->
+
+
+
+
 
     </h:form>
 

@@ -4,6 +4,7 @@ package dmit2015.views;
 import dmit2015.model.StudentInfo;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.omnifaces.cdi.ViewScoped;
 
@@ -18,7 +19,13 @@ public class StudentFormBean  implements Serializable {
         return submissionCount;
     }
 
+
+    @Inject
+    private StudentListSession studentListSession;
+
+
     private StudentInfo studentInfo = new StudentInfo();
+
 
     public StudentInfo getStudentInfo() {
         return studentInfo;
@@ -30,6 +37,8 @@ public class StudentFormBean  implements Serializable {
 
     public void submit(){
         submissionCount ++;
+
+        studentListSession.add(studentInfo);
 
         FacesMessage message = new FacesMessage(
                 FacesMessage.SEVERITY_INFO, "From Submitted: " ,
