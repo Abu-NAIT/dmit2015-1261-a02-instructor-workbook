@@ -46,3 +46,25 @@ Follow the code in the **`dmit2015-faces-demo`** folder.
 - `registration-success.xhtml`
 
 **Topics:** Collections and data tables, JSF navigation, action methods, implicit navigation, redirects with `faces-redirect=true`, JSF lifecycle phases, and validation behavior.
+
+## Week 3–4
+
+Follow the code in the **`dmit2015-faces-firebase-demo`** folder.
+
+### Lesson 7: Architecture and Strategy Pattern
+
+**Setup files:**
+- Import/download project template from Brightspace
+- `pom.xml` --added code from [https://lms.nait.ca/d2l/le/lessons/191328/topics/6251889](https://lms.nait.ca/d2l/le/lessons/191328/topics/6491233)
+- `beans.xml` -- added code from https://lms.nait.ca/d2l/le/lessons/191328/topics/6491524
+- `web.xml` — added configuration from Brightspace
+
+**Template files:**
+- `WEB-INF/faces-templates/layout.xhtml` — Used --DMIT Faces layout template--
+- `webapp/resources/styles.css`
+
+**Pages:**
+- `index.xhtml`  — Used --DMIT Minimal Composition Page template--
+- `aboutus.xhtml`  — Used --DMIT Minimal Composition Page template--
+
+**Topics:** Application architecture, Strategy Pattern, CDI, service interfaces and implementations, in-memory services, Firebase introduction, Lombok, Jakarta Validation, Faces messages, OmniFaces Messages, and Facelets templates.
