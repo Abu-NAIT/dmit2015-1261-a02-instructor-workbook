@@ -47,7 +47,7 @@
                              var="currentItem"
                              reflow="true"
                              selection="#{currentStudentCrudView.selectedStudent}"
-                             rowKey="#{currentItem.Id}"
+                             rowKey="#{currentItem.id}"
                              paginator="true" rows="10"
                              paginatorPosition="bottom">
 
@@ -62,15 +62,15 @@
                         </div>
                     </f:facet>
 
-                    <!-- TODO: add p:column for each property of the entity to display -->
-                    <p:column headerText="Property1" filterBy="#{currentItem.property1}">
-                        <h:outputText value="#{currentItem.property1}"/>
+
+                    <p:column headerText="Student ID" >
+                        <h:outputText value="#{currentItem.id}"/>
                     </p:column>
-                    <p:column headerText="Property2" filterBy="#{currentItem.property2}">
-                        <h:outputText value="#{currentItem.property2}"/>
+                    <p:column headerText="First Name" filterBy="#{currentItem.firstName}">
+                        <h:outputText value="#{currentItem.firstName}"/>
                     </p:column>
-                    <p:column headerText="Property3">
-                        <h:outputText value="#{currentItem.property3}"/>
+                    <p:column headerText="Last Name">
+                        <h:outputText value="#{currentItem.lastName}"/>
                     </p:column>
 
                     <p:column exportable="false" ariaHeaderText="Actions">
@@ -81,7 +81,7 @@
                                          process="@this">
                             <f:setPropertyActionListener value="#{currentItem}"
                                                          target="#{currentStudentCrudView.selectedStudent}"/>
-                            <f:setPropertyActionListener value="#{currentItem.Id}"
+                            <f:setPropertyActionListener value="#{currentItem.id}"
                                                          target="#{currentStudentCrudView.selectedId}"/>
                             <p:resetInput target=":dialogs:manage-Student-content"/>
                         </p:commandButton>
@@ -90,7 +90,7 @@
                                          oncomplete="PF('deleteStudentDialog').show()">
                             <f:setPropertyActionListener value="#{currentItem}"
                                                          target="#{currentStudentCrudView.selectedStudent}"/>
-                            <f:setPropertyActionListener value="#{currentItem.Id}"
+                            <f:setPropertyActionListener value="#{currentItem.id}"
                                                          target="#{currentStudentCrudView.selectedId}"/>
                         </p:commandButton>
                     </p:column>
@@ -108,19 +108,19 @@
 
                     <p:outputPanel id="manage-Student-content" class="ui-fluid">
                         <p:outputPanel rendered="#{not empty currentStudentCrudView.selectedStudent}">
-                            <!-- TODO: Add input field for each editable property of the entity -->
+
                             <div class="field">
-                                <p:outputLabel for="@next">Field 1 Name</p:outputLabel>
+                                <p:outputLabel for="@next">First Name</p:outputLabel>
                                 <p:inputText
-                                        id="field1Name"
-                                        value="#{currentStudentCrudView.selectedStudent.field1Name}">
+                                        id="firstName"
+                                        value="#{currentStudentCrudView.selectedStudent.firstName}">
                                 </p:inputText>
                             </div>
                             <div class="field">
-                                <p:outputLabel for="@next">Field 2 Name</p:outputLabel>
+                                <p:outputLabel for="@next">Last Name</p:outputLabel>
                                 <p:inputText
-                                        id="field2Name"
-                                        value="#{currentStudentCrudView.selectedStudent.field2Name}">
+                                        id="lastName"
+                                        value="#{currentStudentCrudView.selectedStudent.lastName}">
                                 </p:inputText>
                             </div>
 
