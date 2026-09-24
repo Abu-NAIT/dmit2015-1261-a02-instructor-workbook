@@ -68,3 +68,32 @@ Follow the code in the **`dmit2015-faces-firebase-demo`** folder.
 - `aboutus.xhtml`  — Used --DMIT Minimal Composition Page template--
 
 **Topics:** Application architecture, Strategy Pattern, CDI, service interfaces and implementations, in-memory services, Firebase introduction, Lombok, Jakarta Validation, Faces messages, OmniFaces Messages, and Facelets templates.
+
+### Lesson 8: Development Templates and In-Memory CRUD
+
+**Model:**
+- `model/Student.java` — created from scratch; Student domain model
+
+**Service:**
+- `service/StudentService.java`
+  - Template: **Model Service Interface**
+  - Model class: `Student`
+  - ID type: `String`
+- `service/MemoryStudentService.java` — created from scratch; in-memory CRUD implementation
+
+**View:**
+- `view/StudentCrudView.java`
+  - Template: **Faces CRUD Backing Bean**
+  - Model class: `Student`
+  - CDI: `memoryStudentService`
+  - ID type: `String`
+
+**CRUD Page:**
+- `students/manage-students.xhtml`
+  - Template: **CRUD Page**
+  - Manage: `Students`
+  - Model class: `Student`
+  - ID type: `String`
+  - Customized the generated `manage-students.xhtml`
+
+**Topics:** IntelliJ file templates, Project Lombok, DataFaker, Jakarta Validation, JSF templates and composition, CRUD operations, managed beans, service interfaces, and in-memory service implementations.
