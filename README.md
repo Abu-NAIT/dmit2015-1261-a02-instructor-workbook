@@ -46,3 +46,54 @@ Follow the code in the **`dmit2015-faces-demo`** folder.
 - `registration-success.xhtml`
 
 **Topics:** Collections and data tables, JSF navigation, action methods, implicit navigation, redirects with `faces-redirect=true`, JSF lifecycle phases, and validation behavior.
+
+## Week 3–4
+
+Follow the code in the **`dmit2015-faces-firebase-demo`** folder.
+
+### Lesson 7: Architecture and Strategy Pattern
+
+**Setup files:**
+- Import/download project template from Brightspace
+- `pom.xml` --added code from [https://lms.nait.ca/d2l/le/lessons/191328/topics/6251889](https://lms.nait.ca/d2l/le/lessons/191328/topics/6491233)
+- `beans.xml` -- added code from https://lms.nait.ca/d2l/le/lessons/191328/topics/6491524
+- `web.xml` — added configuration from Brightspace
+
+**Template files:**
+- `WEB-INF/faces-templates/layout.xhtml` — Used --DMIT Faces layout template--
+- `webapp/resources/styles.css`
+
+**Pages:**
+- `index.xhtml`  — Used --DMIT Minimal Composition Page template--
+- `aboutus.xhtml`  — Used --DMIT Minimal Composition Page template--
+
+**Topics:** Application architecture, Strategy Pattern, CDI, service interfaces and implementations, in-memory services, Firebase introduction, Lombok, Jakarta Validation, Faces messages, OmniFaces Messages, and Facelets templates.
+
+### Lesson 8: Development Templates and In-Memory CRUD
+
+**Model:**
+- `model/Student.java` — created from scratch; Student domain model
+
+**Service:**
+- `service/StudentService.java`
+  - Template: **Model Service Interface**
+  - Model class: `Student`
+  - ID type: `String`
+- `service/MemoryStudentService.java` — created from scratch; in-memory CRUD implementation
+
+**View:**
+- `view/StudentCrudView.java`
+  - Template: **Faces CRUD Backing Bean**
+  - Model class: `Student`
+  - CDI: `memoryStudentService`
+  - ID type: `String`
+
+**CRUD Page:**
+- `students/manage-students.xhtml`
+  - Template: **CRUD Page**
+  - Manage: `Students`
+  - Model class: `Student`
+  - ID type: `String`
+  - Customized the generated `manage-students.xhtml`
+
+**Topics:** IntelliJ file templates, Project Lombok, DataFaker, Jakarta Validation, JSF templates and composition, CRUD operations, managed beans, service interfaces, and in-memory service implementations.
