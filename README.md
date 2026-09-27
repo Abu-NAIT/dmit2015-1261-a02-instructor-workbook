@@ -16,7 +16,7 @@ Follow the code in the **`dmit2015-javase-demo`** folder.
 
 Follow the code in the **`dmit2015-faces-demo`** folder.
 
-### Lesson 4: Introduction to Jakarta Faces
+## Lesson 4: Introduction to Jakarta Faces
 
 **Coding files:**
 - `HelloBean.java`
@@ -26,7 +26,7 @@ Follow the code in the **`dmit2015-faces-demo`** folder.
 
 **Topics:** Jakarta Faces, Maven WAR projects, Tomcat 11, Facelets, CDI managed beans, EL binding, and PrimeFaces.
 
-### Lesson 5: JSF Components, Form Binding & Validation
+## Lesson 5: JSF Components, Form Binding & Validation
 
 **Coding files:**
 - `StudentFormBean.java`
@@ -51,7 +51,7 @@ Follow the code in the **`dmit2015-faces-demo`** folder.
 
 Follow the code in the **`dmit2015-faces-firebase-demo`** folder.
 
-### Lesson 7: Architecture and Strategy Pattern
+## Lesson 7: Architecture and Strategy Pattern
 
 **Setup files:**
 - Import/download project template from Brightspace
@@ -69,7 +69,7 @@ Follow the code in the **`dmit2015-faces-firebase-demo`** folder.
 
 **Topics:** Application architecture, Strategy Pattern, CDI, service interfaces and implementations, in-memory services, Firebase introduction, Lombok, Jakarta Validation, Faces messages, OmniFaces Messages, and Facelets templates.
 
-### Lesson 8: Development Templates and In-Memory CRUD
+## Lesson 8: Development Templates and In-Memory CRUD
 
 **Model:**
 - `model/Student.java` — created from scratch; Student domain model
@@ -98,7 +98,7 @@ Follow the code in the **`dmit2015-faces-firebase-demo`** folder.
 
 **Topics:** IntelliJ file templates, Project Lombok, DataFaker, Jakarta Validation, JSF templates and composition, CRUD operations, managed beans, service interfaces, and in-memory service implementations.
 
-### Lesson 9: Firebase Setup and CRUD Integration
+## Lesson 9: Firebase Setup and CRUD Integration
 
 In this lesson, we replace the in-memory Student service with Firebase Realtime Database while keeping the existing `StudentService` interface.
 
@@ -257,7 +257,7 @@ Unlike `MemoryStudentService`, Firebase stores the data outside the running appl
 
 **Topics:** Firebase Realtime Database, Firebase REST API, HTTP requests, CRUD operations, service interfaces, Firebase service implementation, MicroProfile Config, CDI, JSF backing beans, and persistent data.
 
-### Lesson 10: Firebase Authentication 
+## Lesson 10: Firebase Authentication 
 
 In this lesson, we add **Firebase Authentication** to the existing Jakarta Faces application using email/password login.
 
@@ -548,3 +548,267 @@ src/main/
 ```
 
 **Topics:** Firebase Authentication, Email/Password authentication, Firebase REST API, ID tokens, Firebase UID, session-scoped beans, MicroProfile Config, login/logout, protected JSF pages, CDI, and multi-tenant Firebase data.
+
+
+## Lesson 11: Multi-Tenant Firebase Security
+
+Lesson 10 focused on **authentication** — *Who is the user?*
+
+Lesson 11 focuses on **authorization and multi-tenancy** — *Which data is the user allowed to access?*
+
+Firebase Authentication gives us:
+
+- `localId` — unique UID of the logged-in user
+- `idToken` — proof that the user is authenticated
+
+Student data is now stored under each user's UID so every authenticated user has their own data.
+
+
+---
+
+#### 1. Start the Existing Project
+
+Run the Lesson 10 project first and verify:
+
+- Login works
+- Student CRUD page works after login
+- Logout works
+
+---
+
+#### 2. Firebase Security Rules —  Step 2 from: https://lms.nait.ca/d2l/le/lessons/191328/topics/6251887
+
+Go to:
+
+```text
+Firebase Console
+→ Realtime Database
+→ Rules
+```
+
+Add/update the security rules from **Step 2** of the Firebase Authentication instructions :https://lms.nait.ca/d2l/le/lessons/191328/topics/6251887
+
+```text
+multi_tenant_data
+└── Student
+    └── $uid
+```
+
+The important rule is:
+
+```text
+auth !== null && auth.uid === $uid
+```
+
+**What it does:** The user must be logged in and can access only data belonging to their own UID.
+
+---
+
+#### 3. Create the HTTP Request File
+
+Create:
+
+```text
+http_request/
+└── FirebaseAuthRTDB_HttpRequest.http
+```
+
+**Template:**
+
+```text
+DMIT2015 Firebase Auth + RTDB Http Client
+```
+
+**Template values:**
+
+```text
+Firebase API Key  → Firebase Web API key
+Email             → Firebase test user email
+Password          → Firebase test user password
+Database URL      → Firebase Realtime Database URL
+Domain Model Name → Student
+ID Value          → new123
+```
+
+The sign-in request gets:
+
+```text
+localId
+idToken
+```
+
+The remaining requests use:
+
+```text
+multi_tenant_data/Student/{{localId}}
+```
+
+and authenticate using:
+
+```text
+?auth={{idToken}}
+```
+
+**What it does:** Tests authenticated multi-tenant Firebase requests before changing the Java service.
+
+---
+
+#### 4. Test the HTTP Requests
+
+Run **Sign in** first to get the `localId` and `idToken`.
+
+Then test:
+
+```text
+PUT     → Create
+GET     → Read
+GET     → Read All
+PUT     → Replace
+PATCH   → Update part
+DELETE  → Delete
+```
+
+If these requests work, Firebase Authentication, Security Rules, and authenticated Realtime Database access are working together.
+
+---
+
+#### 5. Create Multi-Tenant Service 
+
+Create the service using the IntelliJ template:
+
+```text
+DMIT2015 Model Service Interface FirebaseRTDB Multi-Tenant Data Implementation
+```
+
+**Template value:**
+
+```text
+Model class: Student
+```
+
+Creates:
+
+```text
+src/main/java/dmit2015/service/
+└── FirebaseMultiTenantHttpClientStudentService.java
+```
+
+The service is named:
+
+```java
+@Named("firebaseMultiTenantHttpClientStudentService")
+```
+
+It gets the logged-in user's:
+
+```text
+localId
+idToken
+```
+
+from:
+
+```text
+FirebaseAuthSignInSession
+```
+
+**What it does:** Uses the logged-in user's UID for the Firebase data path and the ID token to authenticate CRUD requests.
+
+---
+
+#### 6. Switch the Service — Follow Step 9 form https://lms.nait.ca/d2l/le/lessons/191328/topics/6251887
+
+Open:
+
+```text
+src/main/java/dmit2015/view/StudentCrudView.java
+```
+
+Previously:
+
+```java
+@Named("firebaseHttpClientStudentService")
+```
+
+Change the injected service to:
+
+```java
+@Inject
+@Named("firebaseMultiTenantHttpClientStudentService")
+private StudentService studentService;
+```
+
+**What it does:** Switches Student CRUD from the regular Firebase service to the multi-tenant Firebase service.
+
+We do **not** change:
+
+```text
+StudentService.java
+manage-students.xhtml
+```
+
+---
+
+#### 7. Restart Tomcat
+
+Stop Tomcat, rebuild/redeploy if needed, and start Tomcat again.
+
+Then log in normally.
+
+---
+
+#### 8. Test User 1
+
+Login with **Firebase User 1** and create a few students.
+
+Firebase should store the data under User 1's UID:
+
+```text
+multi_tenant_data
+└── Student
+    └── USER_1_UID
+        ├── student1
+        └── student2
+```
+
+---
+
+#### 9. Test User 2
+
+Logout and login with **Firebase User 2**.
+
+User 2 should **not see User 1's students**.
+
+Create a student for User 2.
+
+Firebase should now look like:
+
+```text
+multi_tenant_data
+└── Student
+    ├── USER_1_UID
+    │   ├── student1
+    │   └── student2
+    │
+    └── USER_2_UID
+        └── student3
+```
+
+Each authenticated user now has their own Student data.
+
+---
+
+**Main Lesson 11 Files:**
+
+```text
+http_request/
+└── FirebaseAuthRTDB_HttpRequest.http
+
+src/main/java/dmit2015/
+├── service/
+│   └── FirebaseMultiTenantHttpClientStudentService.java
+└── view/
+    └── StudentCrudView.java
+```
+
+**Main idea:** Same application, same `StudentService` interface, and same CRUD page — but Firebase now separates and protects data by authenticated user.
