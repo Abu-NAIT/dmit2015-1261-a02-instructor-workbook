@@ -291,7 +291,7 @@ Each user receives a unique Firebase **UID**.
 
 
 
-### 2. Add Firebase Web API Key — Step 3
+#### 2. Add Firebase Web API Key — Step 3
 
 Register a **Web App** in Firebase and copy the **Web API Key**.
 
@@ -345,7 +345,7 @@ Make sure **Pass environment variables** is checked.
 Restart Tomcat so the new environment variable is available to the application.
 
 
-
+---
 
 #### 3. Authentication Model and Service — Step 4
 
