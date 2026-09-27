@@ -257,7 +257,7 @@ Unlike `MemoryStudentService`, Firebase stores the data outside the running appl
 
 **Topics:** Firebase Realtime Database, Firebase REST API, HTTP requests, CRUD operations, service interfaces, Firebase service implementation, MicroProfile Config, CDI, JSF backing beans, and persistent data.
 
-### Lesson 10: Firebase Authentication and Assignment 1 Final
+### Lesson 10: Firebase Authentication 
 
 In this lesson, we add **Firebase Authentication** to the existing Jakarta Faces application using email/password login.
 
