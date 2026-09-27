@@ -291,24 +291,59 @@ Each user receives a unique Firebase **UID**.
 
 
 
+### 2. Add Firebase Web API Key — Step 3
 
+Register a **Web App** in Firebase and copy the **Web API Key**.
 
-#### 2. Add Firebase Web API Key — Step 3
+#### 1. Add the API Key to Ubuntu
 
-Register a **Web App** in your Firebase project and locate the **Web API Key**.
+In the Ubuntu Terminal, open `~/.profile`:
 
-Open:
+```bash
+code ~/.profile
+```
+
+Add at the bottom:
+
+```bash
+export FIREBASE_WEB_API_KEY=YOUR_WEB_API_KEY
+```
+
+Replace `YOUR_WEB_API_KEY` with your Firebase Web API key.
+
+#### 2. Load and Verify the Environment Variable
+
+In the Ubuntu Terminal, run:
+
+```bash
+source ~/.profile
+echo $FIREBASE_WEB_API_KEY
+```
+
+The second command should display your Firebase Web API key.
+
+#### 3. Pass the Environment Variable to Tomcat
+
+In IntelliJ IDEA, go to:
 
 ```text
-src/main/resources/META-INF/microprofile-config.properties
+Run → Edit Configurations → Tomcat
+→ Startup/Connection → Run → Environment Variables
 ```
 
-Add the API key below the existing database URL:
+Add:
 
-```properties
-firebase.rtdb.base.url=YOUR_DATABASE_URL
-firebase.web.api.key=YOUR_WEB_API_KEY
+```text
+FIREBASE_WEB_API_KEY = YOUR_WEB_API_KEY
 ```
+
+Make sure **Pass environment variables** is checked.
+
+
+#### 4. Restart Tomcat
+
+Restart Tomcat so the new environment variable is available to the application.
+
 
 
 
