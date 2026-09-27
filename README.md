@@ -256,3 +256,260 @@ Unlike `MemoryStudentService`, Firebase stores the data outside the running appl
 
 
 **Topics:** Firebase Realtime Database, Firebase REST API, HTTP requests, CRUD operations, service interfaces, Firebase service implementation, MicroProfile Config, CDI, JSF backing beans, and persistent data.
+
+### Lesson 10: Firebase Authentication and Assignment 1 Final
+
+In this lesson, we add **Firebase Authentication** to the existing Jakarta Faces application using email/password login.
+
+Most authentication code is provided in the **Firebase Authentication Instructions on Brightspace**: https://lms.nait.ca/d2l/le/lessons/191328/topics/6251887
+
+**Main focus:** Steps **3–7** and **9–11**.  
+Steps **2 and 8** are discussed separately in lesson 11
+
+
+
+#### 1. Enable Firebase Authentication — Step 1
+
+In **Firebase Console**: https://console.firebase.google.com/u/0/?pli=1
+
+1. Go to **Build → Authentication**.
+2. Click **Get started**.
+3. Open **Sign-in method**.
+4. Enable **Email/Password**.
+5. Go to **Authentication → Users**.
+6. Add at least two test users.
+
+Example:
+
+```text
+user01@dmit2015.ca
+user02@dmit2015.ca
+Password: Password2015
+```
+
+Each user receives a unique Firebase **UID**.
+
+
+
+
+
+#### 2. Add Firebase Web API Key — Step 3
+
+Register a **Web App** in your Firebase project and locate the **Web API Key**.
+
+Open:
+
+```text
+src/main/resources/META-INF/microprofile-config.properties
+```
+
+Add the API key below the existing database URL:
+
+```properties
+firebase.rtdb.base.url=YOUR_DATABASE_URL
+firebase.web.api.key=YOUR_WEB_API_KEY
+```
+
+
+
+#### 3. Authentication Model and Service — Step 4
+
+Create:
+
+```text
+src/main/java/dmit2015/model/FirebaseAuthSignInResponsePayload.java
+```
+
+Copy code for `FirebaseAuthSignInResponsePayload.java` from **Step 4** of  https://lms.nait.ca/d2l/le/lessons/191328/topics/6251887.
+
+It stores authentication information such as:
+
+
+
+Create:
+
+```text
+src/main/java/dmit2015/service/FirebaseAuthService.java
+```
+
+Copy `FirebaseAuthService.java` from **Step 4**.
+
+This service uses Java `HttpClient` to communicate with the **Firebase Authentication REST API**.
+
+
+
+#### 4. Authentication Session — Step 5
+
+Create:
+
+```text
+src/main/java/dmit2015/view/FirebaseAuthSignInSession.java
+```
+
+Copy the code from **Step 5**. https://lms.nait.ca/d2l/le/lessons/191328/topics/6251887
+
+For our project, use:
+
+The bean is session scoped:
+
+```java
+@Named("firebaseAuthSignInSession")
+@SessionScoped
+```
+
+It stores the authentication information for the current logged-in user.
+
+It reads:
+
+```properties
+firebase.web.api.key
+```
+
+from:
+
+```text
+microprofile-config.properties
+```
+
+
+
+#### 5. Login Backing Bean and Page — Step 6
+
+Create the backing bean:
+
+```text
+src/main/java/dmit2015/view/FirebaseAuthSignIn.java
+```
+
+Copy `FirebaseAuthSignIn.java` from **Step 6**. https://lms.nait.ca/d2l/le/lessons/191328/topics/6251887
+
+
+
+Then create the login page:
+
+```text
+src/main/webapp/firebaseAuthSignIn.xhtml
+```
+
+Create it as a **Facelets File** and copy the provided XHTML from **Step 6**.
+
+
+
+#### 6. Add Logout — Step 7
+
+Create:
+
+```text
+src/main/java/dmit2015/view/FacesLogout.java
+```
+
+Copy `FacesLogout.java` from **Step 7**. https://lms.nait.ca/d2l/le/lessons/191328/topics/6251887
+
+
+Logout invalidates the current session using:
+
+```java
+Faces.invalidateSession();
+```
+
+The user is then redirected to the login page.
+
+
+
+
+
+#### 7. Add Login and Logout to Layout — Step 10
+
+Open the existing:
+
+```text
+src/main/webapp/WEB-INF/faces-templates/layout.xhtml
+```
+
+> Do not create another `layout.xhtml`.
+
+Copy the Login/Logout menu code from **Step 10** into the existing navigation/menu.https://lms.nait.ca/d2l/le/lessons/191328/topics/6251887
+
+
+
+The menu uses `firebaseAuthSignInSession` to determine whether to display **Login** or **Logout**.
+
+
+
+#### 8. Protect the Student CRUD Page — Step 11 https://lms.nait.ca/d2l/le/lessons/191328/topics/6251887
+
+Open:
+
+```text
+src/main/webapp/students/manage-students.xhtml
+```
+
+Inside the `maincontent` section, add:
+
+```xml
+<f:metadata>
+    <f:viewAction action="#{firebaseAuthSignInSession.checkForToken}" />
+</f:metadata>
+```
+
+Example:
+
+```xml
+<ui:define name="maincontent">
+
+    <f:metadata>
+        <f:viewAction action="#{firebaseAuthSignInSession.checkForToken}" />
+    </f:metadata>
+
+    <!-- Student CRUD content -->
+
+</ui:define>
+```
+
+This checks whether the user is authenticated before allowing access to the Student CRUD page.
+
+
+
+#### 9. Test Authentication
+
+Run/redeploy the application and test:
+
+- Open `students/manage-students.xhtml` without logging in
+- Confirm you are redirected to `firebaseAuthSignIn.xhtml`
+- Sign in with a Firebase Authentication user
+- Confirm the Student CRUD page is accessible
+- Confirm the logged-in user appears in the layout
+- Click **Logout**
+- Confirm the session is invalidated
+- Try accessing the Student CRUD page again
+- Confirm login is required again
+
+
+
+**Main Files:**
+
+```text
+src/main/
+├── java/dmit2015/
+│   ├── model/
+│   │   └── FirebaseAuthSignInResponsePayload.java
+│   ├── service/
+│   │   └── FirebaseAuthService.java
+│   └── view/
+│       ├── FirebaseAuthSignIn.java
+│       ├── FirebaseAuthSignInSession.java
+│       ├── FacesLogout.java
+│       └── StudentCrudView.java
+├── resources/
+│   └── META-INF/
+│       └── microprofile-config.properties
+└── webapp/
+    ├── firebaseAuthSignIn.xhtml
+    ├── students/
+    │   └── manage-students.xhtml
+    └── WEB-INF/
+        └── faces-templates/
+            └── layout.xhtml
+```
+
+**Topics:** Firebase Authentication, Email/Password authentication, Firebase REST API, ID tokens, Firebase UID, session-scoped beans, MicroProfile Config, login/logout, protected JSF pages, CDI, and multi-tenant Firebase data.
