@@ -32,6 +32,13 @@ public class Task {
 
     private boolean done;
 
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="category_id")
+    private  TaskCategory category;
+
+
+
     @Version
     private  Integer version;
 
@@ -58,6 +65,7 @@ public class Task {
         this.description = other.getDescription();
         this.priority = other.getPriority();
         this.done = other.isDone();
+        this.category= other.getCategory();
     }
 
     // Static copyOf method

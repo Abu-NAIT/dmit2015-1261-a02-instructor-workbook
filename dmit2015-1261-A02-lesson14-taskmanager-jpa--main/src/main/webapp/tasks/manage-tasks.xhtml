@@ -67,6 +67,14 @@
                     <p:column headerText="Priority" filterBy="#{currentItem.priority}">
                         <h:outputText value="#{currentItem.priority}"/>
                     </p:column>
+
+                    //we added that
+                    <p:column headerText="Category" >
+                        <h:outputText value="#{currentItem.category.name}"/>
+                    </p:column>
+
+
+
                     <p:column headerText="Done">
                         <p:selectBooleanCheckbox value="#{currentItem.done}"
                                                  readonly="true"/>

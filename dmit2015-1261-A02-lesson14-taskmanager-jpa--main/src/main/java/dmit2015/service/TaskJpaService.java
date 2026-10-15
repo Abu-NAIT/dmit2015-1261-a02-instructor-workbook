@@ -1,5 +1,5 @@
 package dmit2015.service;
-
+import dmit2015.model.TaskCategory; //we added that--jpa relathinship
 import dmit2015.model.Task;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
@@ -43,11 +43,22 @@ public class TaskJpaService implements TaskService {
         return Optional.empty();
     }
 
+
+
+    //updated code here
     @Override
     public List<Task> getAllTasks() {
-        return entityManager.createQuery("SELECT o FROM Task o ", Task.class)
-                .getResultList();
+
+        return  entityManager.createQuery("""
+        SELECT t FROM Task t 
+        LEFT JOIN FETCH t.category
+        ORDER BY t.description""", Task.class).getResultList();
+
     }
+
+
+
+
 
     @Override
     @Transactional
@@ -82,6 +93,36 @@ public class TaskJpaService implements TaskService {
         } else {
             throw new RuntimeException("Could not find Task with id: " + id);
         }
+    }
+
+
+    //we added that
+    @Transactional
+    public  TaskCategory createCategory( TaskCategory category){
+        entityManager.persist(category);
+        return  category;
+    }
+    //wee added jpql method
+    @Override
+    public  List<Task> findTasksByCategoryName(String categoryName){
+
+        return  entityManager.createQuery("""
+        SELECT t FROM Task t 
+        WHERE t.category.name = :categoryName
+        ORDER BY t.description""", Task.class).setParameter("categoryName",categoryName ).getResultList();
+    }
+
+    //wee added jpql method
+    @Override
+
+    public List<Task> findAllTasksWithCategory(){
+        return  entityManager.createQuery("""
+        SELECT t FROM Task t 
+        JOIN FETCH t.category
+        ORDER BY t.description""", Task.class).getResultList();
+
+
+
     }
 
 }

@@ -16,4 +16,8 @@ public interface TaskService {
     Task updateTask(Task task);
 
     void deleteTaskById(String id);
+
+    //we added this two
+    List<Task> findTasksByCategoryName(String categoryName);
+    List<Task> findAllTasksWithCategory();
 }
