@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<arquillian xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://jboss.org/schema/arquillian"
+            xsi:schemaLocation="http://jboss.org/schema/arquillian  https://jboss.org/schema/arquillian/arquillian_1_0.xsd">
+
+    <engine>
+        <property name="deploymentExportPath">target/</property>
+    </engine>
+
+    <container qualifier="wildfly-managed" default="true">
+        <configuration>
+            <property name="jbossHome">/home/user2015/jdk/server/wildfly-41.0.1.Final</property>
+            <property name="javaHome">/home/user2015/.sdkman/candidates/java/current</property>
+
+
+        </configuration>
+    </container>
+
+    <container qualifier="wildfly-bootable-jar" default="false">
+        <configuration>
+            <property name="jarFile">target/[replace-this-with-your-bootable-jar-filename]</property>
+        </configuration>
+    </container>
+
+</arquillian>
