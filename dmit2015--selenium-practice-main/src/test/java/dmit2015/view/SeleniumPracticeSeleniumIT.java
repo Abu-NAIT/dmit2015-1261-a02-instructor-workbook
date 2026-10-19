@@ -1,6 +1,7 @@
 package dmit2015.view;
 
 import org.openqa.selenium.By; //we added that
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement; // we added that
 import static  org.assertj.core.api.Assertions.assertThat; //we added that
 
@@ -93,16 +94,96 @@ public class SeleniumPracticeSeleniumIT {
     @Test
     void shouldNavigateHome() {
         // Activity 5
+
+        //step1: Open the webpage
+        driver.get(baseUrl + "/selenium-practice.xhtml");
+
+        //step2: find the go home button
+        WebElement homeButton = driver.findElement(By.id("practiceForm:goHomeButton"));
+
+        //step 4: click the button
+        homeButton.click();
+
+        //step 5: wait unit the home page is dislplayed
+
+        WebElement heading= wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("homeHeading")));
+
+        //setp6: verfy the home page heading
+
+        assertThat(heading.getText()).isEqualTo("Lesson 15 Home");
+
     }
+
+
+
+
 
     @Test
     void shouldDisplayValidationMessage() {
         // Activity 6
+        //step1: Open the webpage
+        driver.get(baseUrl + "/selenium-practice.xhtml");
+
+        //step2: click submit button without any value
+        WebElement submitButton = driver.findElement(By.id("practiceForm:submitButton"));
+
+        submitButton.click();
+
+        //step 3: wait utill valdation message apears
+        By messageLocator = By.id ("practiceForm:searchTermMessage");
+
+        //different code
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(messageLocator, "Search term is required."));
+
+        //step 4:
+        assertThat(driver.findElement(messageLocator).getText()).contains("Search term is required.");
+
     }
 
+
+    //has error
     @Test
     void shouldClearSearchRequest() {
         // Activity 7
+        //step1: Open the webpage
+        driver.get(baseUrl + "/selenium-practice.xhtml");
+
+        //step 2: enter search term
+
+        driver.findElement(By.id("practiceForm:searchTerm")).sendKeys("monitor");
+
+        //set3: find submit bitton and  click it
+
+        driver.findElement(By.id("practiceForm:submitButton")).click();
+
+        //step4: wait for the result to apear
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("practiceForm:resultPanel")));
+
+        //setp 5: find and click the clear button
+
+        driver.findElement(By.id("practiceForm:clearButton")).click();
+
+        //step6: wait till it clears data
+
+        wait.ignoring(StaleElementReferenceException.class).until(driver->{WebElement field = driver.findElement(By.id("practiceForm:searchTerm"));
+
+            return "".equals(field.getDomProperty("value"));
+
+
+        });
+
+        //setp7: verfy seaerch filed  is empty
+
+        assertThat(driver.findElement(By.id("practiceForm:searchTerm")).getDomProperty("value")).isEmpty();
+
+        //step 8: verify the result is removed
+
+        assertThat(driver.findElement(By.id("practiceForm:resultPanel")).isEmpty();
+
+
+
+
     }
 
 }
