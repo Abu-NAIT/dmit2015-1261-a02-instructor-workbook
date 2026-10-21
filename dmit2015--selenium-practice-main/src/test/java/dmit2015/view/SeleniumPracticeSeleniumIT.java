@@ -141,49 +141,55 @@ public class SeleniumPracticeSeleniumIT {
     }
 
 
-    //has error
+    //fixed the error
     @Test
     void shouldClearSearchRequest() {
-        // Activity 7
-        //step1: Open the webpage
+
+        // Step 1: Open the practice page.
         driver.get(baseUrl + "/selenium-practice.xhtml");
 
-        //step 2: enter search term
+        // Step 2: Enter a search term.
+        driver.findElement(By.id("practiceForm:searchTerm"))
+                .sendKeys("monitor");
 
-        driver.findElement(By.id("practiceForm:searchTerm")).sendKeys("monitor");
+        // Step 3: Submit the form.
+        driver.findElement(By.id("practiceForm:submitButton"))
+                .click();
 
-        //set3: find submit bitton and  click it
+        // Step 4: Wait for the result to appear.
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.id("practiceForm:resultPanel")
+        ));
 
-        driver.findElement(By.id("practiceForm:submitButton")).click();
+        // Step 5: Click the Clear button.
+        driver.findElement(By.id("practiceForm:clearButton"))
+                .click();
 
-        //step4: wait for the result to apear
+        // Step 6: Wait for the AJAX update to finish.
+        // Retry if PrimeFaces replaces the element.
 
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("practiceForm:resultPanel")));
+        wait.ignoring(StaleElementReferenceException.class)
+                .until(driver -> {
+                    WebElement field = driver.findElement(
+                            By.id("practiceForm:searchTerm")
+                    );
 
-        //setp 5: find and click the clear button
+                    return "".equals(field.getDomProperty("value"));
+                });
 
-        driver.findElement(By.id("practiceForm:clearButton")).click();
+        // Step 7: Verify the search field is empty.
+        assertThat(
+                driver.findElement(
+                        By.id("practiceForm:searchTerm")
+                ).getDomProperty("value")
+        ).isEmpty();
 
-        //step6: wait till it clears data
-
-        wait.ignoring(StaleElementReferenceException.class).until(driver->{WebElement field = driver.findElement(By.id("practiceForm:searchTerm"));
-
-            return "".equals(field.getDomProperty("value"));
-
-
-        });
-
-        //setp7: verfy seaerch filed  is empty
-
-        assertThat(driver.findElement(By.id("practiceForm:searchTerm")).getDomProperty("value")).isEmpty();
-
-        //step 8: verify the result is removed
-
-        assertThat(driver.findElement(By.id("practiceForm:resultPanel")).isEmpty();
-
-
-
-
+        // Step 8: Verify the result is removed.
+        assertThat(
+                driver.findElements(
+                        By.id("practiceForm:resultPanel")
+                )
+        ).isEmpty();
     }
 
 }
