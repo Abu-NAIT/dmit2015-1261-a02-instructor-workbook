@@ -49,7 +49,7 @@ Follow the code and lesson instructions in the dmit2015-faces-firebase-app folde
 
 ### Lesson 14: Jakarta Persistence (JPA) and H2 Database
 
-Follow the code and lesson instructions in the [Student JPA App](./student-jpa-app/) folder.
+Follow the code and lesson instructions in the student-jpa-app folder.
 
 ---
 
