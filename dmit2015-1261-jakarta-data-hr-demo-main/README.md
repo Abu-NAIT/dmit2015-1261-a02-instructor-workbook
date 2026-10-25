@@ -1,47 +1,25 @@
-# DMIT2015 – Jakarta Data: Human Resources Demo
+## Week 7 – Jakarta Data
 
-## Overview
+### Lesson 17–18: Jakarta Data, Autocomplete, and Leaflet
 
-This project is a guided classroom demonstration of Jakarta Data repositories with Hibernate in a Jakarta EE 11 application.
+In these lessons, we connect to an Oracle database, generate JPA entities from existing tables, and use Leaflet.js to display interactive maps in Jakarta Faces.
 
-We will use the **Oracle Human Resources (HR) sample database schema** to generate Jakarta Persistence entities, create Jakarta Data repository interfaces, and build a Jakarta Faces application for searching employees.
+---
 
-This lesson prepares you for **Assignment 4**, which uses similar techniques with the Oracle Customer Orders (CO) database schema.
+### Lesson 17: Jakarta Data and Autocomplete
 
-## Learning Objectives
-
-By the end of this lesson, you should be able to:
-
-- Explain how Jakarta Data differs from Jakarta Persistence.
-- Generate JPA entities from existing database tables using IntelliJ IDEA.
-- Define Jakarta Data repository interfaces using `@Repository`.
-- Create automatic query methods using `@Find`.
-- Write parameterized queries using `@Query`.
-- Filter, sort, and join related entity data.
-- Use `JOIN FETCH` to retrieve associations required by a Faces page.
-- Build a PrimeFaces AutoComplete search interface with a Faces Converter.
-
-## Development Environment
-
-- IntelliJ IDEA Ultimate
-- JDK 25
-- Jakarta EE 11
-- WildFly 40
-- Hibernate ORM / Jakarta Data
-- Oracle Database 23ai Free
-- Jakarta Faces, PrimeFaces, and OmniFaces
-- Maven
-
-Use the dependencies and versions provided in this starter project.
-
-## Getting Started
-
-### 1. Start Oracle Database
+#### 1. Start Oracle Database
 
 Start the Oracle container on the course Ubuntu Desktop VM:
 
 ```bash
 podman start dmit2015-oracle-free-lite
+```
+
+View the container logs:
+
+```bash
+podman logs dmit2015-oracle-free-lite
 ```
 
 Check its status:
@@ -50,90 +28,339 @@ Check its status:
 podman ps
 ```
 
-### 2. Open the Project
+**What it does:** Starts the Oracle database for the Jakarta Data demonstration.
 
-Open the project in IntelliJ IDEA Ultimate and allow Maven to load the dependencies.
+#### 2. Configure Oracle Database Connection — Slide 12
 
-Review the following configuration files:
+In IntelliJ IDEA:
 
-- `pom.xml`
-- `ApplicationConfig.java`
-- `persistence.xml`
-- `jboss-deployment-structure.xml`, if provided
+```text
+Database → New → Data Source → Oracle
+```
 
-Confirm that the application uses the Oracle Human Resources datasource and the `oracle-hr-jpa-pu` persistence unit.
+**Connection settings:**
 
-### 3. Connect to the Human Resources Database
+```text
+Name:             OracleHrSchema@localhost
+Host:             localhost
+Port:             1521
+Connection type:  Service name
+Service:          FREEPDB1
+User:             HR
+Password:         Password2015
+```
 
-In IntelliJ IDEA's Database tool window, configure or select the Oracle Human Resources datasource.
+The **Human Resources (HR)** schema is used for the demonstration. The **Customer Orders (CO)** schema uses the same Oracle server with a different database account.
 
-Use the Oracle connection information provided in the lesson slides.
+**What it does:** Connects IntelliJ to Oracle to explore tables, relationships, and database records.
 
-Test the connection before proceeding.
+#### 3. Generate JPA Entities from Database — Slides 16–17
 
-## Classroom Activities
+In IntelliJ's Database window:
 
-### Part 1 – Database-First Entity Generation
+```text
+Oracle HR Schema
+→ Tables
+→ Right-click
+→ Create JPA Entities from DB
+```
 
-Use IntelliJ IDEA's **Create JPA Entities from DB** feature.
+**Generation settings:**
 
-Generate the entity classes and relationships from the Oracle HR schema into:
+```text
+Target package: dmit2015.entity
+References:     Enabled
+```
 
-`dmit2015.entity`
+Select the tables you want to generate as JPA entities.
 
-Inspect the generated entities and their relationships.
+**What it does:** Generates Java entity classes from existing Oracle tables, including JPA annotations and relationships based on foreign keys.
 
-### Part 2 – Jakarta Data Repositories
+> **Assignment 4 uses this database-first workflow:** generate JPA entities from existing database tables.
 
-Create a `HumanResourcesRepository` interface in:
+---
 
-`dmit2015.repository`
+### Lesson 18: Autocomplete, and Leaflet Maps
 
-Practice repository operations using `@Find` and `@Query`.
+Follow the code and lesson instructions in:
 
-Explore queries that filter employees, sort results, and retrieve related departments, jobs, and managers.
+```text
+dmit2015-1261-jakarta-data-hr-demo-main/
+```
 
-### Part 3 – Employee Search
+**Leaflet documentation:** https://leafletjs.com
 
-Build a Jakarta Faces page that allows users to search for employees by department name.
+Go to **Tutorials → Quick Start Guide**.
 
-Implement:
+#### 1. Create the Leaflet Quick Guide Page
 
-- PrimeFaces AutoComplete for department selection.
-- A Faces Converter to convert the selected department into a `Department` object.
-- A CDI backing bean that uses the Jakarta Data repository.
-- A PrimeFaces DataTable to display matching employees.
+Create:
 
-Display the following employee information:
+```text
+src/main/webapp/leaflet-js-quick-guide.xhtml
+```
 
-- Full Name
-- Hire Date
-- Salary
-- Department
-- Manager
+**Template:**
 
-### Part 4 – Practice Exercise
+```text
+DMIT2015 Faces Minimal Composition Page (No Scaffolding)
+```
 
-Extend the Employee Search page to support searching by **Job Title** using another PrimeFaces AutoComplete component.
+**Template values:**
 
-Use the existing Department Search implementation as a reference.
+```text
+Filename: leaflet-js-quick-guide
+Heading:  Leaflet Quick Guide
+```
 
-## Expected Outcome
+**What it does:** Creates a Jakarta Faces page for displaying a basic Leaflet map.
 
-At the end of the demonstration, the application should allow users to select a department and retrieve employees in that department.
+#### 2. Add Leaflet CSS and JavaScript
 
-After completing the practice exercise, the application should also support searching for employees by job title.
+In `leaflet-js-quick-guide.xhtml`, add the Leaflet stylesheet:
 
-## Connection to Assignment 4
+```xhtml
+<ui:define name="externalstyles">
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+</ui:define>
+```
 
-This lesson uses the Oracle **Human Resources (HR)** sample database to demonstrate Database-First entity generation, Jakarta Data repositories, and PrimeFaces AutoComplete.
+Add the Leaflet JavaScript after the CSS:
 
-In Assignment 4, you will apply these same concepts using the Oracle **Customer Orders (CO)** sample database.
+```xhtml
+<ui:define name="headscripts">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+</ui:define>
+```
 
-**This classroom demo is a separate learning activity and is not a substitute for the Assignment 4 starter project.**
+The shared `layout.xhtml` provides the `externalstyles` and `headscripts` sections.
 
-## Reference Materials
+**What it does:** Loads the Leaflet CSS and JavaScript libraries.
 
-- DMIT2015 – Jakarta Data lesson slides
-- [Jakarta Data 1.0 Specification](https://jakarta.ee/specifications/data/1.0/)
-- [Hibernate Data Repositories Documentation](https://docs.jboss.org/hibernate/orm/7.1/repositories/html_single/Hibernate_Data_Repositories.html)
+#### 3. Add the Map Container
+
+Inside `maincontent`, remove the generated form and keep the heading.
+
+Add:
+
+```html
+<div id="map" style="height: 180px"></div>
+```
+
+**What it does:** Creates the HTML container where Leaflet displays the map.
+
+#### 4. Initialize the Leaflet Map
+
+Inside `leaflet-js-quick-guide.xhtml`, add:
+
+```xhtml
+<ui:define name="bodyscripts">
+    <h:outputScript>
+        var map = L.map('map').setView([51.505, -0.09], 13);
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&#169; OpenStreetMap'
+        }).addTo(map);
+    </h:outputScript>
+</ui:define>
+```
+
+**What it does:** Initializes the map using Leaflet and OpenStreetMap tiles.
+
+#### 5. Add the Page to Navigation
+
+Open:
+
+```text
+src/main/webapp/WEB-INF/faces-templates/layout.xhtml
+```
+
+Add:
+
+```xhtml
+<p:menuitem value="Leaflet Demo"
+            outcome="/leaflet-js-quick-guide"/>
+```
+
+**What it does:** Adds a navigation link to the Leaflet demonstration page.
+
+---
+
+#### 6. Create the MapLocation Model
+
+Create:
+
+```text
+src/main/java/dmit2015/model/MapLocation.java
+```
+
+```java
+package dmit2015.model;
+
+import lombok.Getter;
+import lombok.Setter;
+import java.util.UUID;
+
+@Getter
+@Setter
+public class MapLocation {
+
+    private String id;
+    private String storeName;
+    private double latitude;
+    private double longitude;
+
+    public MapLocation(String storeName, double latitude, double longitude) {
+        id = UUID.randomUUID().toString();
+        this.storeName = storeName;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+}
+```
+
+**What it does:** Stores each location's unique ID, name, latitude, and longitude.
+
+#### 7. Create the MapLocation Backing Bean
+
+Create:
+
+```text
+src/main/java/dmit2015/view/MapLocationView.java
+```
+
+```java
+package dmit2015.view;
+
+import dmit2015.model.MapLocation;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Named;
+import lombok.Getter;
+
+import java.util.List;
+
+@Named
+@RequestScoped
+public class MapLocationView {
+
+    @Getter
+    private List<MapLocation> locations = List.of(
+        new MapLocation(
+            "Northern Alberta Institute of Technology",
+            53.568072, -113.504224
+        ),
+        new MapLocation(
+            "University of Alberta",
+            53.5231733, -113.5275665
+        ),
+        new MapLocation(
+            "MacEwan University",
+            53.5470785, -113.5101388
+        )
+    );
+}
+```
+
+**What it does:** Provides sample locations for the Jakarta Faces page.
+
+#### 8. Create the Multiple Locations Page
+
+Create:
+
+```text
+src/main/webapp/leaflet-map-locations.xhtml
+```
+
+**Template:**
+
+```text
+DMIT2015 Faces Minimal Composition Page (No Scaffolding)
+```
+
+**Template values:**
+
+```text
+Filename: leaflet-map-locations
+Heading:  Leaflet Map Locations
+```
+
+Add the same Leaflet CSS and JavaScript imports used in `leaflet-js-quick-guide.xhtml`.
+
+Inside `maincontent`, replace the generated form with:
+
+```xhtml
+<p:dataTable id="locations"
+             value="#{mapLocationView.locations}"
+             var="currentItem">
+
+    <p:column headerText="Store Name">
+        <h:outputText value="#{currentItem.storeName}"/>
+    </p:column>
+
+    <p:column headerText="Store Location">
+
+        <div id="map#{currentItem.id}"
+             style="height: 240px; width: 320px"></div>
+
+        <h:outputScript>
+            var map = L.map('map#{currentItem.id}')
+                .setView([
+                    #{currentItem.latitude},
+                    #{currentItem.longitude}
+                ], 13);
+
+            L.tileLayer(
+                'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                {
+                    maxZoom: 19,
+                    attribution: '&#169; OpenStreetMap'
+                }
+            ).addTo(map);
+
+            var marker = L.marker([
+                #{currentItem.latitude},
+                #{currentItem.longitude}
+            ]).addTo(map);
+        </h:outputScript>
+
+    </p:column>
+
+</p:dataTable>
+```
+
+**What it does:** Displays a PrimeFaces DataTable with a separate Leaflet map and marker for each location.
+
+---
+
+### Main Week 7 Files
+
+```text
+dmit2015-1261-jakarta-data-hr-demo-main/
+│
+└── src/main/
+    ├── java/dmit2015/
+    │   ├── entity/
+    │   │   └── (JPA entities generated from Oracle tables)
+    │   ├── model/
+    │   │   └── MapLocation.java
+    │   └── view/
+    │       └── MapLocationView.java
+    │
+    └── webapp/
+        ├── leaflet-js-quick-guide.xhtml
+        ├── leaflet-map-locations.xhtml
+        └── WEB-INF/
+            └── faces-templates/
+                └── layout.xhtml
+```
+
+**Main ideas:**
+
+- **Lesson 17:** Connect to Oracle and generate JPA entities using a database-first approach.
+- **Lesson 18:** Integrate Leaflet.js with Jakarta Faces and display multiple map locations using a backing bean and PrimeFaces DataTable.

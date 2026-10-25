@@ -1,6 +1,7 @@
 package dmit2015.repository;
 
 import dmit2015.entity.Department;
+import dmit2015.entity.Employee;
 import dmit2015.entity.Region;
 import jakarta.data.repository.*;
 
@@ -29,12 +30,12 @@ public interface HumanRepository {
     //find a deparment using it primary key
 
     @Find
-    Department departmentByDepartmentId(Short Id);
+    Department departmentByDepartmentId(Short id);
 
     //find region using primary key
 
     @Find
-    Region findRegionById(Long Id);
+    Region findRegionById(Long id);
 
     //retrive all region recorrds
 
@@ -60,4 +61,15 @@ public interface HumanRepository {
 
         List<Department> departmentsBy(String departmentName);
 
+    //retivre employees for a department
+    //join fetch loads department
+    @Query("""
+select e
+from Employee e join fetch e.department join fetch e.job join fetch e.manager
+where e.department.id = ?1
+""")
+    List<Employee> employeesByDepartmentId(Short id);
+
 }
+
+
